@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================= */
+/* GLOBAL LIGHT MODE LOCK    */
+/* ========================= */
+
+:root {
+  --primary: #0e7490;
+  --input-bg: #f1f5f9;
+  /* light gray */
+  --input-border: #cbd5e1;
+  /* gray-300 */
+  --input-focus: #0e7490;
+  /* primary */
+  --input-text: #0f172a;
+  /* slate-900 */
+  --input-placeholder: #64748b;
+  /* slate-500 */
+
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+/* Force light mode */
+html {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+#root {
+  width: 100%;
+}
+
+/* ========================= */
+/* GLOBAL FORM SYSTEM        */
+/* ========================= */
+
+input,
+select,
+textarea {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid var(--input-border);
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  width: 100%;
+  transition: all 0.2s ease-in-out;
+  font-size: 0.95rem;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--input-placeholder);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px rgba(14, 116, 144, 0.15);
+  background-color: white;
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+  background-color: #e2e8f0;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Remove ugly autofill yellow */
+input:-webkit-autofill {
+  box-shadow: 0 0 0px 1000px var(--input-bg) inset;
+  -webkit-text-fill-color: var(--input-text);
+}

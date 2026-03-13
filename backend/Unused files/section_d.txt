@@ -1,0 +1,10 @@
+SECTION D — Unified Layout Confirmation
+DIFF SUMMARY:
+- Extracted common <AdminCatalogTableLayout> to frontend/src/components/admin/Catalog/AdminCatalogTableLayout.jsx
+- Refactored CatalogManager.jsx to wrap <AdminCatalogTableLayout>
+- Refactored PharmacyCatalog.jsx to wrap <AdminCatalogTableLayout>
+- Unified card styles: border-slate-100 rounded-[2.5rem]
+- Unified header: <CatalogPageHeader title={...} stats={...}>
+
+CONFIRMATION:
+No features removed. Moderation for services is intact. Pricing structure for pharmacy is intact.

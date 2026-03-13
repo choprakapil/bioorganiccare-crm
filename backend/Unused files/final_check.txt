@@ -1,0 +1,33 @@
+Doctor: Dr. Test
+Plan: Pro
+Specialty: Dental
+Plan Features:
+Array
+(
+    [modules] => Array
+        (
+            [patients] => 1
+            [billing] => 1
+            [expenses] => 1
+            [inventory] => 1
+            [pharmacy] => 1
+            [growth_insights] => 1
+        )
+
+    [limits] => Array
+        (
+            [max_staff] => 5
+        )
+
+)
+Specialty Features:
+Array
+(
+    [patient_registry] => 1
+    [billing] => 1
+    [expenses] => 1
+    [pharmacy] => 1
+    [growth_insights] => 1
+    [clinical_services] => 1
+    [appointments] => 1
+)

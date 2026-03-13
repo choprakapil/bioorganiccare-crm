@@ -1,0 +1,716 @@
+
+============================
+FULL CATALOG DIAGNOSTIC TRACE
+============================
+
+==== ALL SPECIALTIES ====
+stdClass Object
+(
+    [id] => 7
+    [name] => Dental
+    [default_plan_id] => 2
+    [slug] => dental
+    [features] => []
+    [capabilities] => {"supports_teeth_chart":true,"supports_procedures":true,"supports_medicines":true}
+    [is_active] => 1
+    [has_teeth_chart] => 0
+    [has_eye_chart] => 0
+    [created_at] => 2026-02-14 11:31:10
+    [updated_at] => 2026-02-24 07:07:15
+)
+stdClass Object
+(
+    [id] => 8
+    [name] => General Dentistry
+    [default_plan_id] => 
+    [slug] => 
+    [features] => 
+    [capabilities] => 
+    [is_active] => 1
+    [has_teeth_chart] => 0
+    [has_eye_chart] => 0
+    [created_at] => 2026-02-27 09:52:48
+    [updated_at] => 2026-02-27 09:52:48
+)
+Total Specialties: 2
+
+==== ALL CLINICAL SERVICE CATEGORIES (RAW) ====
+stdClass Object
+(
+    [id] => 1
+    [specialty_id] => 7
+    [name] => services cat 1
+    [sort_order] => 0
+    [is_active] => 1
+    [created_at] => 2026-02-14 13:18:17
+    [updated_at] => 2026-02-23 13:36:36
+    [deleted_at] => 2026-02-23 13:36:36
+)
+stdClass Object
+(
+    [id] => 2
+    [specialty_id] => 8
+    [name] => Basic Services
+    [sort_order] => 0
+    [is_active] => 1
+    [created_at] => 2026-02-27 09:52:48
+    [updated_at] => 2026-02-27 09:52:48
+    [deleted_at] => 
+)
+stdClass Object
+(
+    [id] => 3
+    [specialty_id] => 7
+    [name] => testcat
+    [sort_order] => 0
+    [is_active] => 1
+    [created_at] => 2026-02-27 12:55:21
+    [updated_at] => 2026-02-27 12:55:21
+    [deleted_at] => 
+)
+Total Categories: 3
+
+==== ACTIVE & NON-DELETED CATEGORIES ====
+stdClass Object
+(
+    [id] => 2
+    [specialty_id] => 8
+    [name] => Basic Services
+    [sort_order] => 0
+    [is_active] => 1
+    [created_at] => 2026-02-27 09:52:48
+    [updated_at] => 2026-02-27 09:52:48
+    [deleted_at] => 
+)
+stdClass Object
+(
+    [id] => 3
+    [specialty_id] => 7
+    [name] => testcat
+    [sort_order] => 0
+    [is_active] => 1
+    [created_at] => 2026-02-27 12:55:21
+    [updated_at] => 2026-02-27 12:55:21
+    [deleted_at] => 
+)
+Active Visible Categories: 2
+
+==== CATEGORY COUNT BY SPECIALTY ====
+stdClass Object
+(
+    [specialty_id] => 7
+    [total] => 2
+)
+stdClass Object
+(
+    [specialty_id] => 8
+    [total] => 1
+)
+
+==== ALL CLINICAL CATALOG ITEMS (RAW) ====
+stdClass Object
+(
+    [id] => 1
+    [specialty_id] => 7
+    [item_name] => Service 1
+    [normalized_name] => service 1
+    [type] => Treatment
+    [default_fee] => 100.00
+    [created_at] => 2026-02-14 13:18:48
+    [updated_at] => 2026-02-23 13:36:31
+    [deleted_at] => 2026-02-23 13:36:31
+    [category_id] => 1
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 2
+    [specialty_id] => 7
+    [item_name] => consultation
+    [normalized_name] => consultation
+    [type] => Treatment
+    [default_fee] => 101.00
+    [created_at] => 2026-02-14 13:19:15
+    [updated_at] => 2026-02-23 13:36:36
+    [deleted_at] => 2026-02-23 13:36:36
+    [category_id] => 1
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 3
+    [specialty_id] => 7
+    [item_name] => Impression
+    [normalized_name] => impression
+    [type] => Treatment
+    [default_fee] => 111.00
+    [created_at] => 2026-02-17 13:09:39
+    [updated_at] => 2026-02-23 13:36:36
+    [deleted_at] => 2026-02-23 13:36:36
+    [category_id] => 1
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 4
+    [specialty_id] => 7
+    [item_name] => Root Canal Treatment
+    [normalized_name] => root canal treatment
+    [type] => Treatment
+    [default_fee] => 2500.00
+    [created_at] => 2026-02-19 09:02:43
+    [updated_at] => 2026-02-19 09:02:43
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 2
+    [approved_at] => 2026-02-19 09:02:43
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 5
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:13:19
+    [updated_at] => 2026-02-27 09:13:19
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 6
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:13:46
+    [updated_at] => 2026-02-27 09:13:46
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 7
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:14:08
+    [updated_at] => 2026-02-27 09:14:08
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 8
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:14:53
+    [updated_at] => 2026-02-27 09:14:53
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 9
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:15:14
+    [updated_at] => 2026-02-27 09:15:14
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 10
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:15:56
+    [updated_at] => 2026-02-27 09:15:56
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 11
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:16:16
+    [updated_at] => 2026-02-27 09:16:16
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 12
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:16:45
+    [updated_at] => 2026-02-27 09:16:45
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 16
+    [specialty_id] => 8
+    [item_name] => Root Canal Base 1868194079
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 200.00
+    [created_at] => 2026-02-27 09:52:48
+    [updated_at] => 2026-02-27 11:54:17
+    [deleted_at] => 2026-02-27 11:54:17
+    [category_id] => 2
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 3
+)
+stdClass Object
+(
+    [id] => 17
+    [specialty_id] => 8
+    [item_name] => Audit Test Clinical 224005981
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 150.00
+    [created_at] => 2026-02-27 09:58:58
+    [updated_at] => 2026-02-27 11:54:34
+    [deleted_at] => 2026-02-27 11:54:34
+    [category_id] => 2
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 2
+)
+stdClass Object
+(
+    [id] => 18
+    [specialty_id] => 8
+    [item_name] => Audit Test Clinical 1121200765
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 150.00
+    [created_at] => 2026-02-27 09:59:50
+    [updated_at] => 2026-02-27 11:54:20
+    [deleted_at] => 2026-02-27 11:54:20
+    [category_id] => 2
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 2
+)
+stdClass Object
+(
+    [id] => 19
+    [specialty_id] => 8
+    [item_name] => Event Audit Test Clinical 1513455083
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 150.00
+    [created_at] => 2026-02-27 10:32:30
+    [updated_at] => 2026-02-27 11:54:37
+    [deleted_at] => 2026-02-27 11:54:37
+    [category_id] => 2
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 2
+)
+stdClass Object
+(
+    [id] => 20
+    [specialty_id] => 8
+    [item_name] => Event Audit Test Clinical 409496704
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 150.00
+    [created_at] => 2026-02-27 10:33:04
+    [updated_at] => 2026-02-27 11:54:04
+    [deleted_at] => 2026-02-27 11:54:04
+    [category_id] => 2
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 2
+)
+Total Catalog Items: 17
+
+==== ACTIVE & NON-DELETED CATALOG ITEMS ====
+stdClass Object
+(
+    [id] => 4
+    [specialty_id] => 7
+    [item_name] => Root Canal Treatment
+    [normalized_name] => root canal treatment
+    [type] => Treatment
+    [default_fee] => 2500.00
+    [created_at] => 2026-02-19 09:02:43
+    [updated_at] => 2026-02-19 09:02:43
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 2
+    [approved_at] => 2026-02-19 09:02:43
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 5
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:13:19
+    [updated_at] => 2026-02-27 09:13:19
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 6
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:13:46
+    [updated_at] => 2026-02-27 09:13:46
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 7
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:14:08
+    [updated_at] => 2026-02-27 09:14:08
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 8
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:14:53
+    [updated_at] => 2026-02-27 09:14:53
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 9
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:15:14
+    [updated_at] => 2026-02-27 09:15:14
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 10
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:15:56
+    [updated_at] => 2026-02-27 09:15:56
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 11
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:16:16
+    [updated_at] => 2026-02-27 09:16:16
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 12
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:16:45
+    [updated_at] => 2026-02-27 09:16:45
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+Active Catalog Items: 9
+
+==== ORPHAN CATALOG ITEMS (NO CATEGORY FOUND) ====
+stdClass Object
+(
+    [id] => 4
+    [specialty_id] => 7
+    [item_name] => Root Canal Treatment
+    [normalized_name] => root canal treatment
+    [type] => Treatment
+    [default_fee] => 2500.00
+    [created_at] => 2026-02-19 09:02:43
+    [updated_at] => 2026-02-19 09:02:43
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 2
+    [approved_at] => 2026-02-19 09:02:43
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 5
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:13:19
+    [updated_at] => 2026-02-27 09:13:19
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 6
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:13:46
+    [updated_at] => 2026-02-27 09:13:46
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 7
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:14:08
+    [updated_at] => 2026-02-27 09:14:08
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 8
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:14:53
+    [updated_at] => 2026-02-27 09:14:53
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 9
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:15:14
+    [updated_at] => 2026-02-27 09:15:14
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 10
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:15:56
+    [updated_at] => 2026-02-27 09:15:56
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 11
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:16:16
+    [updated_at] => 2026-02-27 09:16:16
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+stdClass Object
+(
+    [id] => 12
+    [specialty_id] => 7
+    [item_name] => Root Canal - Validated
+    [normalized_name] => 
+    [type] => Treatment
+    [default_fee] => 2000.00
+    [created_at] => 2026-02-27 09:16:45
+    [updated_at] => 2026-02-27 09:16:45
+    [deleted_at] => 
+    [category_id] => 
+    [created_by_user_id] => 
+    [approved_by_user_id] => 
+    [approved_at] => 
+    [version] => 1
+)
+Orphan Items: 9
+
+============================
+END OF DIAGNOSTIC TRACE
+============================

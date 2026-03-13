@@ -1,0 +1,41 @@
+# Base ignore
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+
+# Backend
+backend/vendor/
+backend/node_modules/
+backend/.env
+backend/storage/framework/cache/*
+backend/storage/framework/views/*
+backend/storage/logs/*
+backend/storage/*.key
+/backend/public/storage
+/backend/storage/app/public
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+frontend/.vite/
+
+# Landing
+landing/node_modules/
+landing/dist/
+landing/.env
+landing/.env.local
+landing/.env.*.local
+landing/.vite/
+
+# Temporary
+restructure_temp/
+recovery_temp/
+*.zip
+*.sql
+!database/schema/*.sql
+backup_crm_stable_zip/

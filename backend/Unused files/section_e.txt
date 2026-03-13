@@ -1,0 +1,18 @@
+SECTION E — Full Stability Audit Results
+1) FK Integrity Scan:
+Orphan Services: 0
+Orphan Medicines: 0
+
+2) Duplicate Scan (specialty_id + normalized_name uniqueness):
+Clinical Catalog Duplicates: 0
+Master Medicines Duplicates: 0
+
+3) Cross-Entity Dependency Matrix:
+Cascade from local_services -> none. Promoted -> mapped to valid global ID (FK check passed).
+
+4) Soft-delete integrity:
+Attempts to force delete global components with linked locals correctly throw exceptions inside DeleteManager.
+
+5) Governance flow test:
+No loops. Local deleted -> DB handles soft delete. Global preserved.
+

@@ -1,0 +1,77 @@
+{
+    "patients": {
+        "status_code": 200,
+        "response_size_bytes": 5761,
+        "query_count": 2,
+        "total_query_time_ms": 4.56,
+        "total_response_time_ms": 26.07,
+        "queries": [
+            "select count(*) as aggregate from `patients` where `doctor_id` = ? and `patients`.`deleted_at` is null",
+            "select `patients`.*, (select sum(`invoices`.`total_amount`) from `invoices` where `patients`.`id` = `invoices`.`patient_id`) as `invoice_total`, (select sum(`invoices`.`paid_amount`) from `invoices` where `patients`.`id` = `invoices`.`patient_id`) as `amount_paid` from `patients` where `doctor_id` = ? and `patients`.`deleted_at` is null order by `created_at` desc limit 20 offset 0"
+        ]
+    },
+    "finance_summary": {
+        "status_code": 200,
+        "response_size_bytes": 448,
+        "query_count": 9,
+        "total_query_time_ms": 22,
+        "total_response_time_ms": 26.17,
+        "queries": [
+            "select * from `cache` where `key` in (?)",
+            "select SUM(total_amount) as revenue, SUM(paid_amount) as cash, SUM(balance_due) as pending from `invoices` where `doctor_id` = ? and `created_at` between ? and ? limit 1",
+            "select sum(invoice_items.quantity * invoice_items.unit_cost) as aggregate from `invoice_items` inner join `invoices` on `invoice_items`.`invoice_id` = `invoices`.`id` where `invoices`.`doctor_id` = ? and `invoices`.`created_at` between ? and ? and `invoice_items`.`type` = ?",
+            "select sum(`amount`) as aggregate from `expenses` where `doctor_id` = ? and `expense_date` between ? and ?",
+            "select SUM(total_amount) as revenue, SUM(paid_amount) as cash, SUM(balance_due) as pending from `invoices` where `doctor_id` = ? and `created_at` between ? and ? limit 1",
+            "select sum(invoice_items.quantity * invoice_items.unit_cost) as aggregate from `invoice_items` inner join `invoices` on `invoice_items`.`invoice_id` = `invoices`.`id` where `invoices`.`doctor_id` = ? and `invoices`.`created_at` between ? and ? and `invoice_items`.`type` = ?",
+            "select sum(`amount`) as aggregate from `expenses` where `doctor_id` = ? and `expense_date` between ? and ?",
+            "select sum(quantity_remaining * unit_cost) as aggregate from `inventory_batches` where `doctor_id` = ?",
+            "insert into `cache` (`expiration`, `key`, `value`) values (?, ?, ?) on duplicate key update `expiration` = values(`expiration`), `key` = values(`key`), `value` = values(`value`)"
+        ]
+    },
+    "finance_revenue_trend": {
+        "status_code": 500,
+        "response_size_bytes": 62,
+        "query_count": 3,
+        "total_query_time_ms": 20.88,
+        "total_response_time_ms": 23,
+        "queries": [
+            "select * from `cache` where `key` in (?)",
+            "select DATE(created_at) as date, SUM(total_amount) as revenue from `invoices` where `doctor_id` = ? and `status` != ? and `created_at` >= ? group by DATE(created_at) order by `date` asc",
+            "insert into `cache` (`expiration`, `key`, `value`) values (?, ?, ?) on duplicate key update `expiration` = values(`expiration`), `key` = values(`key`), `value` = values(`value`)"
+        ]
+    },
+    "invoices": {
+        "status_code": 200,
+        "response_size_bytes": 9036,
+        "query_count": 2,
+        "total_query_time_ms": 10.17,
+        "total_response_time_ms": 17.65,
+        "queries": [
+            "select * from `invoices` where `doctor_id` = ? order by `created_at` desc, `id` desc limit 21",
+            "select * from `patients` where `patients`.`id` in (24, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35) and `patients`.`deleted_at` is null"
+        ]
+    },
+    "inventory": {
+        "status_code": 200,
+        "response_size_bytes": 3367,
+        "query_count": 3,
+        "total_query_time_ms": 3.8,
+        "total_response_time_ms": 8.05,
+        "queries": [
+            "select count(*) as aggregate from `inventory` where `doctor_id` = ? and `inventory`.`deleted_at` is null",
+            "select * from `inventory` where `doctor_id` = ? and `inventory`.`deleted_at` is null order by `item_name` asc limit 20 offset 0",
+            "select * from `master_medicines` where `master_medicines`.`id` in (1)"
+        ]
+    },
+    "expenses": {
+        "status_code": 200,
+        "response_size_bytes": 1446,
+        "query_count": 2,
+        "total_query_time_ms": 0.98,
+        "total_response_time_ms": 4.08,
+        "queries": [
+            "select count(*) as aggregate from `expenses` where `doctor_id` = ?",
+            "select * from `expenses` where `doctor_id` = ? order by `expense_date` desc limit 20 offset 0"
+        ]
+    }
+}

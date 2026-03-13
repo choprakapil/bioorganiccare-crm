@@ -1,0 +1,32 @@
+{
+    "status": 200,
+    "total_queries": 6,
+    "total_query_time_ms": 15.48,
+    "total_response_time_ms": 30.05,
+    "queries": [
+        {
+            "sql": "select * from `cache` where `key` in (?)",
+            "time_ms": 0.89
+        },
+        {
+            "sql": "select SUM(CASE WHEN created_at >= ? AND created_at <= ? THEN total_amount ELSE 0 END) as cur_revenue, SUM(CASE WHEN created_at >= ? AND created_at <= ? THEN paid_amount ELSE 0 END) as cur_cash, SUM(CASE WHEN created_at >= ? AND created_at <= ? THEN balance_due ELSE 0 END) as cur_pending, SUM(CASE WHEN created_at >= ? AND created_at <= ? THEN total_amount ELSE 0 END) as prev_revenue, SUM(CASE WHEN created_at >= ? AND created_at <= ? THEN paid_amount ELSE 0 END) as prev_cash, SUM(CASE WHEN created_at >= ? AND created_at <= ? THEN balance_due ELSE 0 END) as prev_pending from `invoices` where `doctor_id` = ? and `created_at` >= ? and `created_at` <= ? limit 1",
+            "time_ms": 5.76
+        },
+        {
+            "sql": "select SUM(CASE WHEN invoices.created_at >= ? AND invoices.created_at <= ? THEN invoice_items.quantity * invoice_items.unit_cost ELSE 0 END) as cur_cogs, SUM(CASE WHEN invoices.created_at >= ? AND invoices.created_at <= ? THEN invoice_items.quantity * invoice_items.unit_cost ELSE 0 END) as prev_cogs from `invoice_items` inner join `invoices` on `invoice_items`.`invoice_id` = `invoices`.`id` where `invoices`.`doctor_id` = ? and `invoices`.`created_at` >= ? and `invoices`.`created_at` <= ? and `invoice_items`.`type` = ? limit 1",
+            "time_ms": 2.76
+        },
+        {
+            "sql": "select SUM(CASE WHEN expense_date >= ? AND expense_date <= ? THEN amount ELSE 0 END) as cur_expenses, SUM(CASE WHEN expense_date >= ? AND expense_date <= ? THEN amount ELSE 0 END) as prev_expenses from `expenses` where `doctor_id` = ? and `expense_date` >= ? and `expense_date` <= ? limit 1",
+            "time_ms": 2.24
+        },
+        {
+            "sql": "select sum(quantity_remaining * unit_cost) as aggregate from `inventory_batches` where `doctor_id` = ?",
+            "time_ms": 0.7
+        },
+        {
+            "sql": "insert into `cache` (`expiration`, `key`, `value`) values (?, ?, ?) on duplicate key update `expiration` = values(`expiration`), `key` = values(`key`), `value` = values(`value`)",
+            "time_ms": 3.13
+        }
+    ]
+}

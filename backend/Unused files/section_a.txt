@@ -1,0 +1,51 @@
+SECTION A — Version Snapshot Proof
+==== SERVICE VERSION ====
+stdClass Object
+(
+    [id] => 22
+    [entity_type] => clinical
+    [entity_id] => 33
+    [version_number] => 1
+    [changed_by_user_id] => 2
+    [old_payload] => []
+    [new_payload] => {"id":3,"doctor_id":27,"specialty_id":17,"item_name":"Snapshot Test Service","normalized_name":"snapshot test service","type":"Treatment","default_fee":"100.00","is_promoted":0,"promoted_catalog_id":null,"created_at":"2026-03-03 11:49:43","updated_at":"2026-03-03 11:49:43","deleted_at":null}
+    [created_at] => 2026-03-03 11:49:43
+)
+==== SERVICE AUDIT LOG ====
+stdClass Object
+(
+    [id] => 45
+    [entity_type] => clinical
+    [entity_id] => 33
+    [action] => promoted_from_local
+    [performed_by_user_id] => 2
+    [metadata] => {"original_local_id":3}
+    [ip_address] => 127.0.0.1
+    [user_agent] => Symfony
+    [created_at] => 2026-03-03 11:49:43
+)
+==== MEDICINE VERSION ====
+stdClass Object
+(
+    [id] => 23
+    [entity_type] => pharmacy
+    [entity_id] => 15
+    [version_number] => 1
+    [changed_by_user_id] => 2
+    [old_payload] => []
+    [new_payload] => {"id":4,"doctor_id":27,"specialty_id":17,"item_name":"Snapshot Test Med","normalized_name":"snapshot test med","buy_price":"10.00","sell_price":"20.00","is_promoted":0,"promoted_master_id":null,"created_at":"2026-03-03 11:49:43","updated_at":"2026-03-03 11:49:43","deleted_at":null}
+    [created_at] => 2026-03-03 11:49:43
+)
+==== MEDICINE AUDIT LOG ====
+stdClass Object
+(
+    [id] => 46
+    [entity_type] => pharmacy
+    [entity_id] => 15
+    [action] => promoted_from_local
+    [performed_by_user_id] => 2
+    [metadata] => {"original_local_id":4}
+    [ip_address] => 127.0.0.1
+    [user_agent] => Symfony
+    [created_at] => 2026-03-03 11:49:43
+)

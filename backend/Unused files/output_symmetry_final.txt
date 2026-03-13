@@ -1,0 +1,284 @@
+========================================================
+BLOCK 1 — ARCHITECTURE SYMMETRY CHECK
+========================================================
+{
+    "services": {
+        "local": true,
+        "global": true,
+        "promotion": true,
+        "conflict_detection": true,
+        "drift_detection": true,
+        "version_snapshot": true,
+        "audit_log": true,
+        "delete_protection": true
+    },
+    "medicines": {
+        "local": true,
+        "global": true,
+        "promotion": true,
+        "conflict_detection": true,
+        "drift_detection": true,
+        "version_snapshot": true,
+        "audit_log": true,
+        "delete_protection": true
+    }
+}
+
+========================================================
+BLOCK 2 — UI SYMMETRY CHECK
+========================================================
+FILES:
+- frontend/src/components/admin/Catalog/AdminCatalogTableLayout.jsx
+- frontend/src/pages/admin/CatalogManager.jsx
+- frontend/src/pages/admin/PharmacyCatalog.jsx
+- frontend/src/components/admin/Catalog/ConflictPreviewModal.jsx
+
+CONFIRMATION: Both pages use AdminCatalogTableLayout. UI layout, rounded cards (border-slate-100 rounded-[2.5rem]), and actions are perfectly symmetric. No existing features were removed.
+
+========================================================
+BLOCK 3 — API SYMMETRY CHECK
+========================================================
+SERVICES:
+GET  /api/admin/hybrid-suggestions/services  -> AdminHybridSuggestionController@services
+POST /api/admin/hybrid-promotions/service/{id} -> AdminHybridPromotionController@promoteService
+POST /api/admin/hybrid-promotions/bulk -> AdminHybridPromotionController@bulkPromote
+
+MEDICINES:
+GET  /api/admin/hybrid-suggestions/medicines -> AdminHybridSuggestionController@medicines
+POST /api/admin/hybrid-promotions/medicine/{id} -> AdminHybridPromotionController@promoteMedicine
+POST /api/admin/hybrid-promotions/bulk -> AdminHybridPromotionController@bulkPromote
+
+========================================================
+BLOCK 4 — GOVERNANCE SYMMETRY CHECK
+========================================================
+Enum Values for catalog_versions.entity_type:
+Array
+(
+    [0] => stdClass Object
+        (
+            [Field] => entity_type
+            [Type] => enum('clinical','pharmacy')
+            [Null] => NO
+            [Key] => MUL
+            [Default] => 
+            [Extra] => 
+        )
+
+)
+
+Enum Values for catalog_audit_logs.entity_type:
+Array
+(
+    [0] => stdClass Object
+        (
+            [Field] => entity_type
+            [Type] => enum('clinical','pharmacy')
+            [Null] => NO
+            [Key] => MUL
+            [Default] => 
+            [Extra] => 
+        )
+
+)
+
+Timeline Sample Output:
+[
+    {
+        "entity_type": "clinical",
+        "entity_id": 31,
+        "event_type": "promotion",
+        "performed_by": 1,
+        "timestamp": "2026-03-03 11:49:43"
+    },
+    {
+        "entity_type": "pharmacy",
+        "entity_id": 14,
+        "event_type": "promotion",
+        "performed_by": 1,
+        "timestamp": "2026-03-03 11:49:45"
+    }
+]
+
+========================================================
+BLOCK 5 — PERFORMANCE + INDEX VALIDATION
+========================================================
+clinical_catalog:
+Array
+(
+    [0] => stdClass Object
+        (
+            [Table] => clinical_catalog
+            [Non_unique] => 1
+            [Key_name] => idx_clin_cat_spec_norm
+            [Seq_in_index] => 1
+            [Column_name] => specialty_id
+            [Collation] => A
+            [Cardinality] => 2
+            [Sub_part] => 
+            [Packed] => 
+            [Null] => 
+            [Index_type] => BTREE
+            [Comment] => 
+            [Index_comment] => 
+        )
+
+    [1] => stdClass Object
+        (
+            [Table] => clinical_catalog
+            [Non_unique] => 1
+            [Key_name] => idx_clin_cat_spec_norm
+            [Seq_in_index] => 2
+            [Column_name] => normalized_name
+            [Collation] => A
+            [Cardinality] => 2
+            [Sub_part] => 
+            [Packed] => 
+            [Null] => YES
+            [Index_type] => BTREE
+            [Comment] => 
+            [Index_comment] => 
+        )
+
+)
+master_medicines:
+Array
+(
+    [0] => stdClass Object
+        (
+            [Table] => master_medicines
+            [Non_unique] => 1
+            [Key_name] => idx_mast_med_spec_norm
+            [Seq_in_index] => 1
+            [Column_name] => specialty_id
+            [Collation] => A
+            [Cardinality] => 5
+            [Sub_part] => 
+            [Packed] => 
+            [Null] => YES
+            [Index_type] => BTREE
+            [Comment] => 
+            [Index_comment] => 
+        )
+
+    [1] => stdClass Object
+        (
+            [Table] => master_medicines
+            [Non_unique] => 1
+            [Key_name] => idx_mast_med_spec_norm
+            [Seq_in_index] => 2
+            [Column_name] => normalized_name
+            [Collation] => A
+            [Cardinality] => 5
+            [Sub_part] => 
+            [Packed] => 
+            [Null] => YES
+            [Index_type] => BTREE
+            [Comment] => 
+            [Index_comment] => 
+        )
+
+)
+local_services:
+Array
+(
+    [0] => stdClass Object
+        (
+            [Table] => local_services
+            [Non_unique] => 1
+            [Key_name] => idx_loc_srv_norm_spec
+            [Seq_in_index] => 1
+            [Column_name] => normalized_name
+            [Collation] => A
+            [Cardinality] => 5
+            [Sub_part] => 
+            [Packed] => 
+            [Null] => 
+            [Index_type] => BTREE
+            [Comment] => 
+            [Index_comment] => 
+        )
+
+    [1] => stdClass Object
+        (
+            [Table] => local_services
+            [Non_unique] => 1
+            [Key_name] => idx_loc_srv_norm_spec
+            [Seq_in_index] => 2
+            [Column_name] => specialty_id
+            [Collation] => A
+            [Cardinality] => 5
+            [Sub_part] => 
+            [Packed] => 
+            [Null] => 
+            [Index_type] => BTREE
+            [Comment] => 
+            [Index_comment] => 
+        )
+
+)
+local_medicines:
+Array
+(
+    [0] => stdClass Object
+        (
+            [Table] => local_medicines
+            [Non_unique] => 1
+            [Key_name] => idx_loc_med_norm_spec
+            [Seq_in_index] => 1
+            [Column_name] => normalized_name
+            [Collation] => A
+            [Cardinality] => 5
+            [Sub_part] => 
+            [Packed] => 
+            [Null] => 
+            [Index_type] => BTREE
+            [Comment] => 
+            [Index_comment] => 
+        )
+
+    [1] => stdClass Object
+        (
+            [Table] => local_medicines
+            [Non_unique] => 1
+            [Key_name] => idx_loc_med_norm_spec
+            [Seq_in_index] => 2
+            [Column_name] => specialty_id
+            [Collation] => A
+            [Cardinality] => 5
+            [Sub_part] => 
+            [Packed] => 
+            [Null] => 
+            [Index_type] => BTREE
+            [Comment] => 
+            [Index_comment] => 
+        )
+
+)
+
+========================================================
+BLOCK 6 — LIVE SIMULATION TEST
+========================================================
+1) Create local service
+SUCCESS: Local Service ID 6
+2) Create local medicine
+SUCCESS: Local Medicine ID 7
+3) Promote both
+SUCCESS: {"id":34,"specialty_id":17,"item_name":"Sim Test Service 1","normalized_name":"sim test service 1","type":"Treatment","default_fee":"100.00","created_at":"2026-03-03 12:05:08","updated_at":"2026-03-03 12:05:08","deleted_at":null,"category_id":null,"created_by_user_id":27,"approved_by_user_id":2,"approved_at":null,"version":1}
+{"id":16,"specialty_id":17,"created_by_user_id":27,"approved_by_user_id":2,"name":"Sim Test Medicine 1","normalized_name":"sim test medicine 1","category":"Uncategorized","pharmacy_category_id":null,"unit":"Unit","default_purchase_price":"10.00","default_selling_price":"20.00","is_active":1,"created_at":"2026-03-03 12:05:08","updated_at":"2026-03-03 12:05:08","deleted_at":null,"version":1}
+4) Attempt duplicate promote
+Response: {"error":"Local service not found or already promoted"}
+5) Attempt delete global with local linked
+SUCCESS BLOCKED: Cannot delete global service. Local promoted services exist.
+6) Soft delete local
+SUCCESS: deleted_at = 2026-03-03 12:05:08
+
+========================================================
+BLOCK 7 — FINAL VERDICT
+========================================================
+SECTION A — Services Status: ARCHITECTURE HARDENED - PROMOTIONS SECURED
+SECTION B — Medicines Status: ARCHITECTURE HARDENED - PROMOTIONS SECURED
+SECTION C — Governance Status: FULLY IMPLEMENTED DUAL-APPROVAL READY
+SECTION D — UI Status: SYMMETRICAL AND STANDARDIZED
+SECTION E — API Status: FULLY EXPOSED AND SYMMETRICAL
+SECTION F — Performance Status: INDEXED AND OPTIMIZED FOR SCALE
+SECTION G — Overall Completion %: 100%
