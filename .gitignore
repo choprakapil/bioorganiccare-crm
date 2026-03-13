@@ -32,10 +32,12 @@ landing/.env.local
 landing/.env.*.local
 landing/.vite/
 
-# Temporary
+# Temporary & Diagnostic
 restructure_temp/
 recovery_temp/
 *.zip
 *.sql
 !database/schema/*.sql
 backup_crm_stable_zip/
+unused files/
+backend/Unused files/
