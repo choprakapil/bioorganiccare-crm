@@ -1,8 +1,0 @@
-SECTION B — Promotion Approval Toggle Proof
-[TOGGLE ON: promotion_requires_approval = true]
-Response Code: 202
-Response Body: {"status":"pending_approval","message":"Promotion requires dual admin approval. Request created.","promotion_request_id":"req_64032ab1c"}
-
-[TOGGLE OFF: promotion_requires_approval = false]
-Response Code: 404 (Allowed through middleware, hit DB not found)
-Response Body: {"error":"Local service not found or already promoted"}

@@ -1,0 +1,83 @@
+name: Production Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  build-and-deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: Build CRM frontend
+        run: |
+          cd frontend
+          npm run build
+
+      - name: Install landing dependencies
+        run: |
+          cd landing
+          npm install
+
+      - name: Build landing page
+        run: |
+          cd landing
+          npm run build
+
+      - name: Create temp deploy dir
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 46.202.182.65
+          username: u721531294
+          port: 65002
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: mkdir -p /home/u721531294/domains/bioorganiccare.com/deploy_temp
+
+      - name: Copy built files to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: 46.202.182.65
+          username: u721531294
+          port: 65002
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: "frontend/dist,landing/dist"
+          target: "/home/u721531294/domains/bioorganiccare.com/deploy_temp"
+
+      - name: Deploy to VPS via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 46.202.182.65
+          username: u721531294
+          port: 65002
+          key: ${{ secrets.SERVER_SSH_KEY }}
+
+          script: |
+
+            echo "Starting deployment"
+
+            cd /home/u721531294/domains/bioorganiccare.com/project
+
+            git pull origin main
+
+            chmod +x deploy.sh
+
+            ./deploy.sh
+
+            echo "Deployment finished"
