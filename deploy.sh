@@ -60,21 +60,33 @@ ssh -p $PORT $SERVER "mkdir -p $RELEASE_PATH/public/app $RELEASE_PATH/public/api
 rsync -avz -e "ssh -p $PORT" frontend/dist/ $SERVER:$RELEASE_PATH/public/app/
 rsync -avz -e "ssh -p $PORT" landing/dist/ $SERVER:$RELEASE_PATH/public/
  
-# 4. DB Backup
+# 4. DB Backup (Non-fatal – deployment continues even if backup fails)
 echo -e "${YELLOW}💾 Backing up database...${NC}"
 ssh -p $PORT $SERVER << EOF
   if [ -f "$SHARED_DIR/.env" ]; then
     DB_NAME=\$(grep '^DB_DATABASE=' $SHARED_DIR/.env | cut -d '=' -f2- | tr -d '\r' | sed 's/^"//;s/"\$//')
     DB_USER=\$(grep '^DB_USERNAME=' $SHARED_DIR/.env | cut -d '=' -f2- | tr -d '\r' | sed 's/^"//;s/"\$//')
     DB_PASS=\$(grep '^DB_PASSWORD=' $SHARED_DIR/.env | cut -d '=' -f2- | tr -d '\r' | sed 's/^"//;s/"\$//')
+
     if [ ! -z "\$DB_NAME" ]; then
       echo "Dumping \$DB_NAME..."
-      if /usr/bin/mariadb-dump --no-tablespaces -u "\$DB_USER" -p"\$DB_PASS" "\$DB_NAME" > $SHARED_DIR/backups/backup_$TIMESTAMP.sql; then
-        echo "✅ Backup saved."
+
+      DUMP_CMD=""
+      if command -v mariadb-dump >/dev/null 2>&1; then
+        DUMP_CMD="mariadb-dump"
+      elif command -v mysqldump >/dev/null 2>&1; then
+        DUMP_CMD="mysqldump"
       else
-        echo "❌ Database backup failed."
-        rm -f $SHARED_DIR/backups/backup_$TIMESTAMP.sql
-        exit 1
+        echo "⚠ No database dump utility (mariadb-dump or mysqldump) found. Skipping backup."
+      fi
+
+      if [ ! -z "\$DUMP_CMD" ]; then
+        if ! "\$DUMP_CMD" --no-tablespaces -u "\$DB_USER" -p"\$DB_PASS" "\$DB_NAME" > "$SHARED_DIR/backups/backup_$TIMESTAMP.sql"; then
+          echo "⚠ Database backup failed using \$DUMP_CMD. Deployment will continue without a fresh backup."
+          rm -f "$SHARED_DIR/backups/backup_$TIMESTAMP.sql"
+        else
+          echo "✅ Backup saved."
+        fi
       fi
     fi
   fi
