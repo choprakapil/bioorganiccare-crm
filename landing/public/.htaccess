@@ -1,0 +1,12 @@
+RewriteEngine On
+ 
+# If the request is for /api or /app, do not process it through the landing page rules
+RewriteCond %{REQUEST_URI} ^/api/ [OR]
+RewriteCond %{REQUEST_URI} ^/app/
+RewriteRule ^ - [L]
+ 
+# Standard SPA routing for landing page
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
