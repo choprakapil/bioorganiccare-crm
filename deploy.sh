@@ -90,8 +90,8 @@ ssh -p $PORT $SERVER << EOF
   # Run package discovery manually
   $PHP_BIN artisan package:discover --ansi
  
-  # Move original Laravel public assets to the public/api folder
-  cp -r public/* ../public/api/
+  # Move original Laravel public assets to the public/api folder (including .htaccess)
+  cp -r public/. ../public/api/
  
   # Production Fix: Storage link inside public/api
   cd ../public/api
@@ -115,8 +115,8 @@ ssh -p $PORT $SERVER << EOF
 EOF
  
 # 7. Health Check
-echo -e "${YELLOW}🔍 Performing Health Check...${NC}"
-# Fixed shell syntax for local execution
+echo -e "${YELLOW}🔍 Performing Health Check (https://bioorganiccare.com/api/health)...${NC}"
+# Use -k if SSL is not yet verified or self-signed
 HEALTH_STATUS=$(curl -s -k -o /dev/null -w "%{http_code}" https://bioorganiccare.com/api/health || echo "404")
  
 if [ "$HEALTH_STATUS" == "200" ]; then

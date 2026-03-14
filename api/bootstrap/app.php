@@ -13,13 +13,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
         using: function () {
             Route::middleware('api')
-                ->prefix('')
+                ->prefix(env('APP_ENV') === 'production' ? '' : 'api')
                 ->group(base_path('routes/api.php'));
  
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
  
-            Route::get('/up', function() { return response('OK', 200); });
+            // Optional direct health check for deployment script safety
+            Route::get('/up', function() { return response()->json(['status' => 'ok']); });
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
