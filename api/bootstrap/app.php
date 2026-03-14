@@ -13,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
         using: function () {
             Route::middleware('api')
-                ->prefix(env('APP_ENV') === 'production' ? '' : 'api')
+                ->prefix(PHP_SAPI === 'cli-server' ? 'api' : '')
                 ->group(base_path('routes/api.php'));
  
             Route::middleware('web')
