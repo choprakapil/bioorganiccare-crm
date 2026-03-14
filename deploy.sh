@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
  
 # ==============================================================================
 # PROFESSIONAL GIT-BASED ATOMIC DEPLOYMENT SYSTEM (HOSTINGER HARDENED)
@@ -68,8 +69,13 @@ ssh -p $PORT $SERVER << EOF
     DB_PASS=\$(grep '^DB_PASSWORD=' $SHARED_DIR/.env | cut -d '=' -f2- | tr -d '\r' | sed 's/^"//;s/"\$//')
     if [ ! -z "\$DB_NAME" ]; then
       echo "Dumping \$DB_NAME..."
-      mysqldump --no-tablespaces -u "\$DB_USER" -p"\$DB_PASS" "\$DB_NAME" > $SHARED_DIR/backups/backup_$TIMESTAMP.sql
-      echo "✅ Backup saved."
+      if mysqldump --no-tablespaces -u "\$DB_USER" -p"\$DB_PASS" "\$DB_NAME" > $SHARED_DIR/backups/backup_$TIMESTAMP.sql; then
+        echo "✅ Backup saved."
+      else
+        echo "❌ Database backup failed."
+        rm -f $SHARED_DIR/backups/backup_$TIMESTAMP.sql
+        exit 1
+      fi
     fi
   fi
 EOF
@@ -78,11 +84,13 @@ EOF
 echo -e "${YELLOW}🔧 Installing backend & optimizing (PHP 8.4)...${NC}"
 ssh -p $PORT $SERVER << EOF
   cd $RELEASE_PATH/api
- 
+
   # Link shared resources (3 levels deep)
   ln -sfn ../../../shared/.env .env
   rm -rf storage
   ln -sfn ../../../shared/storage storage
+  mkdir -p bootstrap/cache storage/logs storage/framework/cache storage/framework/sessions storage/framework/views storage/app
+  rm -f bootstrap/cache/*.php
   
   # Install dependencies with explicit PHP 8.4
   $PHP_BIN $COMPOSER_BIN install --no-dev --optimize-autoloader --no-scripts
