@@ -19,7 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
  
-            Route::get('/up', function() { return response()->noContent(); });
+            Route::get('/up', function() { return response('OK', 200); });
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
