@@ -69,7 +69,7 @@ ssh -p $PORT $SERVER << EOF
     DB_PASS=\$(grep '^DB_PASSWORD=' $SHARED_DIR/.env | cut -d '=' -f2- | tr -d '\r' | sed 's/^"//;s/"\$//')
     if [ ! -z "\$DB_NAME" ]; then
       echo "Dumping \$DB_NAME..."
-      if mysqldump --no-tablespaces -u "\$DB_USER" -p"\$DB_PASS" "\$DB_NAME" > $SHARED_DIR/backups/backup_$TIMESTAMP.sql; then
+      if /usr/bin/mariadb-dump --no-tablespaces -u "\$DB_USER" -p"\$DB_PASS" "\$DB_NAME" > $SHARED_DIR/backups/backup_$TIMESTAMP.sql; then
         echo "✅ Backup saved."
       else
         echo "❌ Database backup failed."
