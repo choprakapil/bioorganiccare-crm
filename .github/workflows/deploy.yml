@@ -19,12 +19,12 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Install frontend dependencies
         run: |
           cd frontend
-          npm install
+          npm install --legacy-peer-deps
 
       - name: Build CRM frontend
         run: |
@@ -34,7 +34,7 @@ jobs:
       - name: Install landing dependencies
         run: |
           cd landing
-          npm install
+          npm install --legacy-peer-deps
 
       - name: Build landing page
         run: |
