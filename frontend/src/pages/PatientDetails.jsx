@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../api/axios';
+import { API_BASE_URL } from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import { handleApiError } from '../utils/errorHandler';
@@ -478,8 +479,7 @@ export default function PatientDetails() {
 
     const handleDownloadPdf = () => {
         if (!selectedInvoice) return;
-        const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
-        window.open(`${baseUrl}/public/invoices/${selectedInvoice.invoice.uuid}/pdf`, '_blank');
+        window.open(`${API_BASE_URL}/public/invoices/${selectedInvoice.invoice.uuid}/pdf`, '_blank');
     };
 
 

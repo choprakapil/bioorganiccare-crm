@@ -1,5 +1,6 @@
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
+import { API_BASE_URL } from './api/axios';
 
 window.Pusher = Pusher;
 Pusher.logToConsole = true;
@@ -12,7 +13,7 @@ window.Echo = new Echo({
     wssPort: 8080,
     forceTLS: false,
     enabledTransports: ['ws'],
-    authEndpoint: import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/broadcasting/auth` : 'http://localhost:8000/api/broadcasting/auth',
+    authEndpoint: `${API_BASE_URL}/broadcasting/auth`,
     auth: {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('auth_token')}`,

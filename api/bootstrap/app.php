@@ -3,15 +3,18 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
  
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
+        web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
         commands: __DIR__.'/../routes/console.php',
         channels: __DIR__.'/../routes/channels.php',
         health: '/up',
-        using: function () {
+        apiPrefix: '',
+        then: function () {
             // 1. API Root Status Page
             Route::get('/', function () {
                 return response()->json([
@@ -87,19 +90,17 @@ return Application::configure(basePath: dirname(__DIR__))
                     "debug" => config('app.debug')
                 ]);
             });
-
-            Route::middleware('api')
-                ->prefix(trim(env('APP_ENV')) === 'production' ? '' : 'api')
-                ->group(base_path('routes/api.php'));
- 
-            Route::middleware('web')
-                ->group(base_path('routes/web.php'));
- 
-            Route::get('/up', function() { return response()->json(['status' => 'ok']); });
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->redirectGuestsTo(function (Request $request) {
+            return $request->expectsJson() || in_array('api', $request->route()?->gatherMiddleware() ?? [], true)
+                ? null
+                : '/app/login';
+        });
+
         $middleware->alias([
+            'auth' => \App\Http\Middleware\Authenticate::class,
             'subscription' => \App\Http\Middleware\EnsureSubscriptionActive::class,
             'module' => \App\Http\Middleware\EnforcePlanLimits::class,
             'role' => \App\Http\Middleware\CheckRole::class,
@@ -113,12 +114,12 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, \Illuminate\Http\Request $request) {
+            if ($request->expectsJson() || in_array('api', $request->route()?->gatherMiddleware() ?? [], true)) {
+                return response()->json([
+                    'message' => 'Unauthenticated.',
+                ], 401);
+            }
 
-    if ($request->expectsJson() || $request->is('api/*')) {
-        return response()->json([
-            'message' => 'Unauthenticated.'
-        ], 401);
-    }
-
-});
+            return redirect('/app/login');
+        });
     })->create();

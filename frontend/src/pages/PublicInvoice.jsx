@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Printer, Download, MessageSquare, ShieldCheck, Landmark, Pill, Scissors } from 'lucide-react';
+import { API_BASE_URL } from '../api/axios';
 
 export default function PublicInvoice() {
     const { uuid } = useParams();
@@ -12,8 +13,7 @@ export default function PublicInvoice() {
     useEffect(() => {
         const fetchInvoice = async () => {
             try {
-                const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
-                const res = await axios.get(`${baseUrl}/public/invoices/${uuid}`);
+                const res = await axios.get(`${API_BASE_URL}/public/invoices/${uuid}`);
                 setData(res.data);
             } catch (err) {
                 setError('Invoice not found or expired.');
@@ -25,8 +25,7 @@ export default function PublicInvoice() {
     }, [uuid]);
 
     const handleDownloadPdf = () => {
-        const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
-        window.open(`${baseUrl}/public/invoices/${uuid}/pdf`, '_blank');
+        window.open(`${API_BASE_URL}/public/invoices/${uuid}/pdf`, '_blank');
     };
 
     if (loading) return (

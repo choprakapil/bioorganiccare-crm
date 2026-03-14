@@ -101,6 +101,7 @@ ssh -p $PORT $SERVER << EOF
   # Laravel Optimization (PHP 8.4)
   cd ../../api
   $PHP_BIN artisan migrate --force
+  $PHP_BIN artisan optimize:clear
   $PHP_BIN artisan config:cache
   $PHP_BIN artisan route:cache
   $PHP_BIN artisan view:cache
@@ -122,6 +123,44 @@ HEALTH_BODY=$(echo "$HEALTH_RESPONSE" | sed '1,/^\r$/d')
  
 if [ "$HEALTH_STATUS" == "200" ]; then
     echo -e "${GREEN}✅ Health Check Passed! Status: $HEALTH_STATUS${NC}"
+
+    echo -e "${YELLOW}🔐 Verifying Auth Contract (POST /api/login invalid creds)...${NC}"
+    LOGIN_STATUS=$(curl -s -k -o /tmp/bioorganiccare_login_check.json -w "%{http_code}" \
+      -X POST https://bioorganiccare.com/api/login \
+      -H "Accept: application/json" \
+      -H "Content-Type: application/json" \
+      -d '{"email":"invalid@example.com","password":"invalid-password"}')
+    LOGIN_BODY=$(cat /tmp/bioorganiccare_login_check.json)
+
+    echo -e "${YELLOW}🔐 Verifying Auth Contract (GET /api/me unauthenticated)...${NC}"
+    ME_STATUS=$(curl -s -k -o /tmp/bioorganiccare_me_check.json -w "%{http_code}" \
+      https://bioorganiccare.com/api/me \
+      -H "Accept: application/json")
+    ME_BODY=$(cat /tmp/bioorganiccare_me_check.json)
+
+    if [ "$LOGIN_STATUS" != "422" ] || [ "$ME_STATUS" != "401" ]; then
+        echo -e "${RED}❌ Auth Contract Check Failed.${NC}"
+        echo -e "${RED}POST /api/login status: $LOGIN_STATUS${NC}"
+        echo -e "${RED}POST /api/login body: $LOGIN_BODY${NC}"
+        echo -e "${RED}GET /api/me status: $ME_STATUS${NC}"
+        echo -e "${RED}GET /api/me body: $ME_BODY${NC}"
+        echo -e "${YELLOW}🔄 Rolling back...${NC}"
+        ssh -p $PORT $SERVER << EOF
+          cd $RELEASES_DIR
+          PREVIOUS=\$(ls -1t | sed -n '2p')
+          if [ ! -z "\$PREVIOUS" ]; then
+            ln -sfn $RELEASES_DIR/\$PREVIOUS $CURRENT_SYM
+            rm -rf $PUBLIC_HTML
+            ln -sfn $CURRENT_SYM/public $PUBLIC_HTML
+            echo "✅ Rollback to \$PREVIOUS complete."
+          else
+            echo "❌ No previous release found to rollback to!"
+          fi
+EOF
+        exit 1
+    fi
+
+    echo -e "${GREEN}✅ Auth Contract Check Passed!${NC}"
     # Cleanup old releases (keep 5)
     ssh -p $PORT $SERVER "cd $RELEASES_DIR && ls -1t | tail -n +6 | xargs rm -rf"
 else
