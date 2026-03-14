@@ -9,13 +9,6 @@ Broadcast::routes([
     'middleware' => ['auth:sanctum'],
 ]);
 
-Route::get('/health', function () {
-    return response()->json([
-        'status' => 'ok',
-        'time' => now()
-    ]);
-});
-
 Route::post('/login', [AuthController::class, 'login']);
 
 // Landing Page Enquiry (Public)

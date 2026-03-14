@@ -116,8 +116,9 @@ EOF
  
 # 7. Health Check
 echo -e "${YELLOW}🔍 Performing Health Check (https://bioorganiccare.com/api/health)...${NC}"
-# Use -k if SSL is not yet verified or self-signed
-HEALTH_STATUS=$(curl -s -k -o /dev/null -w "%{http_code}" https://bioorganiccare.com/api/health || echo "404")
+HEALTH_RESPONSE=$(curl -s -k -i https://bioorganiccare.com/api/health)
+HEALTH_STATUS=$(echo "$HEALTH_RESPONSE" | grep HTTP | tail -n 1 | awk '{print $2}')
+HEALTH_BODY=$(echo "$HEALTH_RESPONSE" | sed '1,/^\r$/d')
  
 if [ "$HEALTH_STATUS" == "200" ]; then
     echo -e "${GREEN}✅ Health Check Passed! Status: $HEALTH_STATUS${NC}"
@@ -125,7 +126,9 @@ if [ "$HEALTH_STATUS" == "200" ]; then
     ssh -p $PORT $SERVER "cd $RELEASES_DIR && ls -1t | tail -n +6 | xargs rm -rf"
 else
     # Rollback if failed
-    echo -e "${RED}❌ Health Check Failed (Status: $HEALTH_STATUS). Rolling back...${NC}"
+    echo -e "${RED}❌ Health Check Failed (Status: $HEALTH_STATUS).${NC}"
+    echo -e "${RED}Response Body: $HEALTH_BODY${NC}"
+    echo -e "${YELLOW}🔄 Rolling back...${NC}"
     ssh -p $PORT $SERVER << EOF
       cd $RELEASES_DIR
       # Identify previous release (timestamp sorting)

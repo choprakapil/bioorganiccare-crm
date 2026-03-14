@@ -12,6 +12,14 @@ return Application::configure(basePath: dirname(__DIR__))
         channels: __DIR__.'/../routes/channels.php',
         health: '/up',
         using: function () {
+            // Direct health check for deployment script safety
+            Route::get('/health', function() {
+                return response()->json([
+                    'status' => 'ok',
+                    'time' => now()
+                ]);
+            });
+
             Route::middleware('api')
                 ->prefix(env('APP_ENV') === 'production' ? '' : 'api')
                 ->group(base_path('routes/api.php'));
@@ -19,7 +27,6 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
  
-            // Optional direct health check for deployment script safety
             Route::get('/up', function() { return response()->json(['status' => 'ok']); });
         },
     )
