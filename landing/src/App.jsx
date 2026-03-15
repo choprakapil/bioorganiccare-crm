@@ -118,8 +118,12 @@ function App() {
 
     setStatus({ loading: true, success: false, error: null });
 
-    // Use environment variable for API endpoint
-    const API_URL = import.meta.env.VITE_API_URL || '/api/landing-enquiry';
+    // Resolve API endpoint for both dev and production without relying on localhost in prod
+    const API_URL = import.meta.env.DEV
+      // Local development: hit the Laravel app directly (can be overridden via VITE_API_URL)
+      ? (import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/enquiries')
+      // Production: always go through the deployed API prefix on the same origin
+      : '/api/enquiries';
 
     try {
       const response = await fetch(API_URL, {

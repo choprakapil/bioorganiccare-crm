@@ -6,6 +6,38 @@ on:
       - main
 
 jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p 65002 46.202.182.65 >> ~/.ssh/known_hosts
+
+      - name: Run Deployment Script
+        run: |
+          chmod +x deploy.sh
+          ./deploy.sh
+
+name: Production Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
 
   build-and-deploy:
 

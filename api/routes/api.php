@@ -12,7 +12,11 @@ Broadcast::routes([
 Route::post('/login', [AuthController::class, 'login']);
 
 // Landing Page Enquiry (Public)
+// Legacy endpoint (kept for backward compatibility with older landing builds)
 Route::post('/landing-enquiry', [\App\Http\Controllers\LandingEnquiryController::class, 'store']);
+
+// Canonical endpoint for landing page enquiries
+Route::post('/enquiries', [\App\Http\Controllers\LandingEnquiryController::class, 'store']);
 
 // Public Invoice Access
 Route::get('/public/invoices/{uuid}', [\App\Http\Controllers\InvoiceController::class, 'showPublic']);
@@ -320,3 +324,16 @@ Route::middleware(['auth:sanctum', 'tenant', 'require.specialty.admin'])->group(
 
 Route::post('/admin/system-reset', [\App\Http\Controllers\Admin\SystemResetController::class, 'resetSystemData'])
     ->middleware(['auth:sanctum','role:super_admin']);
+
+// Deployment version metadata (for production audits)
+Route::get('/version', function () {
+    $path = storage_path('app/version.json');
+
+    if (!file_exists($path)) {
+        return response()->json([
+            'status' => 'unknown',
+        ]);
+    }
+
+    return response()->file($path);
+});

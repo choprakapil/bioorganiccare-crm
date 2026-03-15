@@ -1,5 +1,91 @@
 #!/bin/bash
 set -euo pipefail
+
+# ==============================================================================
+# LOCAL GIT SAFETY CHECK
+# ==============================================================================
+
+echo "🔍 Checking Git status..."
+
+# Ensure this is a Git repository
+if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+
+  # Fetch latest remote info
+  git fetch
+
+  # ----------------------------
+  # Check for UNCOMMITTED changes
+  # ----------------------------
+  if ! git diff-index --quiet HEAD --; then
+    echo ""
+    echo "⚠️  You have LOCAL CHANGES that are not committed."
+    git status --short
+    echo ""
+
+    read -p "Do you want to commit and push them before deploying? (y/n/c): " choice
+
+    if [[ "$choice" == "y" ]]; then
+      echo "📦 Adding files..."
+      git add .
+
+      read -p "Enter commit message: " msg
+      git commit -m "$msg"
+
+      echo "🚀 Pushing to GitHub..."
+      git push
+
+      echo "✅ Changes pushed successfully."
+
+    elif [[ "$choice" == "n" ]]; then
+      echo "⚠️ Continuing deployment WITHOUT pushing changes."
+
+    else
+      echo "❌ Deployment cancelled."
+      exit 1
+    fi
+  fi
+
+  # ----------------------------
+  # Check for LOCAL COMMITS not pushed
+  # ----------------------------
+  LOCAL_COMMITS=$(git rev-list @{u}..HEAD 2>/dev/null || echo "")
+
+  if [[ -n "$LOCAL_COMMITS" ]]; then
+    echo ""
+    echo "⚠️  You have COMMITS that are NOT pushed to GitHub."
+    git log --oneline @{u}..HEAD
+    echo ""
+
+    read -p "Do you want to push them before deploying? (y/n/c): " choice
+
+    if [[ "$choice" == "y" ]]; then
+      echo "🚀 Pushing commits..."
+      git push
+      echo "✅ Push complete."
+
+    elif [[ "$choice" == "n" ]]; then
+      echo "⚠️ Continuing deployment with GitHub's older code."
+
+    else
+      echo "❌ Deployment cancelled."
+      exit 1
+    fi
+  fi
+
+else
+  echo "⚠️ Not a Git repository. Skipping Git safety checks."
+fi
+
+# Deployment lock to prevent concurrent runs
+LOCK_FILE="/tmp/bioorganiccare_deploy.lock"
+
+if [ -f "$LOCK_FILE" ]; then
+  echo "❌ Another deployment is already running."
+  exit 1
+fi
+
+touch "$LOCK_FILE"
+trap "rm -f \"$LOCK_FILE\"" EXIT
  
 # ==============================================================================
 # PROFESSIONAL GIT-BASED ATOMIC DEPLOYMENT SYSTEM (HOSTINGER HARDENED)
@@ -35,13 +121,13 @@ echo -e "${YELLOW}🚀 Starting Hardened Hostinger Deployment...${NC}"
 # 1. Local Frontend Builds
 echo -e "${YELLOW}📦 Building CRM Frontend LOCALLY...${NC}"
 cd frontend || exit
-npm install --legacy-peer-deps
+npm ci --legacy-peer-deps
 npm run build
 cd ..
  
 echo -e "${YELLOW}📦 Building Landing Page LOCALLY...${NC}"
 cd landing || exit
-npm install --legacy-peer-deps
+npm ci --legacy-peer-deps
 npm run build
 cd ..
  
@@ -51,7 +137,26 @@ ssh -p $PORT $SERVER << EOF
   mkdir -p $RELEASES_DIR $SHARED_DIR/storage $SHARED_DIR/backups
   mkdir -p $SHARED_DIR/storage/logs $SHARED_DIR/storage/framework/sessions $SHARED_DIR/storage/framework/views $SHARED_DIR/storage/framework/cache $SHARED_DIR/storage/app
   chmod -R 775 $SHARED_DIR/storage
-  git clone --depth 1 $REPO_URL $RELEASE_PATH
+
+  rm -rf $RELEASE_PATH
+  git clone --depth 1 $REPO_URL $RELEASE_PATH || {
+    echo "❌ Git clone failed."
+    exit 1
+  }
+
+  # Record deployment version metadata for this release
+  cd $RELEASE_PATH
+  COMMIT_HASH=\$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+  DEPLOY_TIME=\$(date "+%Y-%m-%d %H:%M:%S")
+  RELEASE_NAME=\$(basename $RELEASE_PATH)
+  mkdir -p api/storage/app
+  cat <<VERSION_EOF > api/storage/app/version.json
+{
+  "release": "$RELEASE_NAME",
+  "commit": "$COMMIT_HASH",
+  "time": "$DEPLOY_TIME"
+}
+VERSION_EOF
 EOF
  
 # 3. Upload Local Builds to Release Path
@@ -125,6 +230,12 @@ ssh -p $PORT $SERVER << EOF
   $PHP_BIN artisan config:cache
   $PHP_BIN artisan route:cache
   $PHP_BIN artisan view:cache
+
+  # Safety check: ensure enquiries route exists in this release
+  $PHP_BIN artisan route:list | grep enquiries || {
+    echo "❌ enquiries route missing after route:cache! Aborting release."
+    exit 1
+  }
 EOF
  
 # 6. Atomic Release Switch
@@ -181,8 +292,25 @@ EOF
     fi
 
     echo -e "${GREEN}✅ Auth Contract Check Passed!${NC}"
-    # Cleanup old releases (keep 5)
-    ssh -p $PORT $SERVER "cd $RELEASES_DIR && ls -1t | tail -n +6 | xargs rm -rf"
+
+    echo -e "${YELLOW}🔎 Testing Landing Enquiry Endpoint...${NC}"
+    ENQUIRY_STATUS=$(curl -s -k -o /tmp/enquiry_test.json -w "%{http_code}" \
+      -X POST https://bioorganiccare.com/api/enquiries \
+      -H "Content-Type: application/json" \
+      -d '{"name":"Deploy Test","phone":"0000000000"}')
+
+    ENQUIRY_BODY=$(cat /tmp/enquiry_test.json)
+
+    if [ "$ENQUIRY_STATUS" != "201" ]; then
+      echo -e "${RED}❌ Enquiry endpoint test failed.${NC}"
+      echo -e "${RED}Status: $ENQUIRY_STATUS${NC}"
+      echo -e "${RED}Body: $ENQUIRY_BODY${NC}"
+      exit 1
+    fi
+
+    echo -e "${GREEN}✅ Enquiry endpoint working!${NC}"
+    # Cleanup old releases (keep 5) – only touch release_* directories
+    ssh -p $PORT $SERVER "cd $RELEASES_DIR && ls -1dt release_* | tail -n +6 | xargs rm -rf"
 else
     # Rollback if failed
     echo -e "${RED}❌ Health Check Failed (Status: $HEALTH_STATUS).${NC}"
@@ -205,3 +333,9 @@ EOF
 fi
  
 echo -e "${GREEN}🎉 Deployment Successful!${NC}"
+echo "-------------------------------------"
+echo "🚀 Deployment Complete"
+echo "Release : $RELEASE_NAME"
+echo "Server  : $SERVER"
+echo "API     : https://bioorganiccare.com/api/version"
+echo "-------------------------------------"
