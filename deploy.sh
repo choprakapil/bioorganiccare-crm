@@ -152,9 +152,9 @@ ssh -p $PORT $SERVER << EOF
   mkdir -p api/storage/app
   cat <<VERSION_EOF > api/storage/app/version.json
 {
-  "release": "$RELEASE_NAME",
-  "commit": "$COMMIT_HASH",
-  "time": "$DEPLOY_TIME"
+  "release": "\$RELEASE_NAME",
+  "commit": "\$COMMIT_HASH",
+  "time": "\$DEPLOY_TIME"
 }
 VERSION_EOF
 EOF
