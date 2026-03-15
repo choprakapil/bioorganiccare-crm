@@ -339,3 +339,30 @@ echo "Release : $RELEASE_NAME"
 echo "Server  : $SERVER"
 echo "API     : https://bioorganiccare.com/api/version"
 echo "-------------------------------------"
+
+# =====================================================
+# LIVE DEPLOYMENT COMMIT VERIFICATION
+# =====================================================
+
+echo ""
+echo "🔎 Verifying live deployment version..."
+
+# Get local commit
+LOCAL_COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+
+# Get server commit from version endpoint
+SERVER_COMMIT=$(curl -s https://bioorganiccare.com/api/version | grep -o '"commit":[^,]*' | cut -d'"' -f4)
+
+echo ""
+echo "Local commit  : $LOCAL_COMMIT"
+echo "Server commit : $SERVER_COMMIT"
+echo ""
+
+if [ "$LOCAL_COMMIT" = "$SERVER_COMMIT" ]; then
+    echo -e "${GREEN}✅ Deployment verified successfully.${NC}"
+else
+    echo -e "${RED}❌ WARNING: Server commit does not match local commit!${NC}"
+    echo "This may indicate a failed or partial deployment."
+fi
+
+echo ""
